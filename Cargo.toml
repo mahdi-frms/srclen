@@ -2,7 +2,13 @@
 name = "srclen"
 version = "0.1.0"
 edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+license = "MIT"
+description = "count the lines in a Rust source code file."
+readme = "README.md"
+homepage = "https://github.com/mahdi-frms/srclen"
+repository = "https://github.com/mahdi-frms/srclen"
+keywords = ["cli", "count", "lines"]
+categories = ["command-line-utilities"]
+authors = ["mahdi-frms <mahdif1380@outlook.com>"]
 
 [dependencies]
