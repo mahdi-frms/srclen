@@ -10,7 +10,7 @@ fn count(text:&str)->usize{
         if c == '\n' {
             new_line = true;
         }
-        else {
+        else if c != ' ' {
             if new_line {
                 counter += 1;
             }
@@ -40,6 +40,17 @@ mod test {
 "fn main() {
     println!(\"Hello, world!\");
 
+}
+";
+        assert_eq!(count(text),3);
+    }
+
+    #[test]
+    fn ignores_lines_with_only_white_spaces(){
+        let text = 
+"fn main() {
+    println!(\"Hello, world!\");
+    
 }
 ";
         assert_eq!(count(text),3);
