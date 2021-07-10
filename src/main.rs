@@ -5,16 +5,21 @@ fn main() {
     
     let mut args = std::env::args();
     args.next();
+    let mut sum = 0;
     for arg in args {
         match std::fs::read_to_string(arg.as_str()){
             Ok(content)=> {
-                println!("{}: {} lines",arg,count(content.as_str()));
+                let count = count(content.as_str());
+                sum += count;
+                println!("{}: {} lines",arg,count);
             },
             Err(_)=> {
                 println!("{}: could not read file!",arg);
             }
         }
     }
+
+    println!("\nsum: {} lines",sum);
 }
 
 struct CounterStatus {
