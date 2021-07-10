@@ -1,8 +1,19 @@
 fn main() {
-    println!("Hello, world!");
+    
+    let mut args = std::env::args();
+    args.next();
+    for arg in args {
+        match std::fs::read_to_string(arg.as_str()){
+            Ok(content)=> {
+                println!("{}: {} lines",arg,count(content.as_str()));
+            },
+            Err(_)=> {
+                println!("{}: could not read file!",arg);
+            }
+        }
+    }
 }
 
-#[allow(dead_code)]
 fn count(text:&str)->usize{
     let mut counter = 0;
     let mut new_line = true;
