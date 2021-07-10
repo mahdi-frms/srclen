@@ -5,12 +5,20 @@ fn main() {
 #[allow(dead_code)]
 fn count(text:&str)->usize{
     let mut counter = 0;
+    let mut new_line = true;
     for c in text.chars() {
-        if c == '\n'{
-            counter += 1;
+        if c == '\n' {
+            new_line = true;
+        }
+        else {
+            if new_line {
+                counter += 1;
+            }
+            new_line = false;
         }
     }
-    counter + 1
+    
+    counter
 }
 
 #[cfg(test)]
@@ -23,6 +31,17 @@ mod test {
 "fn main() {
     println!(\"Hello, world!\");
 }";
+        assert_eq!(count(text),3);
+    }
+
+    #[test]
+    fn ignores_empty_lines(){
+        let text = 
+"fn main() {
+    println!(\"Hello, world!\");
+
+}
+";
         assert_eq!(count(text),3);
     }
 }
