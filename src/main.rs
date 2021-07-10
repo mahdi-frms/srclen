@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod test;
+
 fn main() {
     
     let mut args = std::env::args();
@@ -14,78 +17,52 @@ fn main() {
     }
 }
 
+struct CounterStatus {
+    counter:usize,
+    slash:bool,
+    new_line:bool
+}
+impl CounterStatus {
+    fn new()->CounterStatus {
+        CounterStatus{
+            counter:0,
+            slash:false,
+            new_line:true
+        }
+    }
+}
 fn count(text:&str)->usize{
-    let mut counter = 0;
-    let mut new_line = true;
-    let mut slash = false;
+    let mut status = CounterStatus::new();
     for c in text.chars() {
         if c == '\n' {
-            new_line = true;
+            status.new_line = true;
         }
         else if c == '/' {
-            if new_line {
-                if slash {
-                    slash = false;
-                    new_line = false;
-                }
-                else{
-                    slash = true;
-                }
-            }
+            count_handle_slash(&mut status)
         }
         else{
-            slash = false;
-            if c != ' ' && new_line {
-                counter += 1;
-                new_line = false;
-            }
+            count_normal_char(&mut status ,c)
         }
     }
-    
-    counter
+    status.counter
 }
 
-#[cfg(test)]
-mod test {
-    use crate::count;
-
-    #[test]
-    fn counts_lines(){
-        let text = 
-"fn main() {
-    println!(\"Hello, world!\");
-}";
-        assert_eq!(count(text),3);
+fn count_handle_slash(status:&mut CounterStatus) {
+    if  status.new_line {
+        if status.slash {
+            status.slash = false;
+            status.new_line = false;
+        }
+        else{
+            status.slash = true;
+        }
     }
-
-    #[test]
-    fn ignores_empty_lines(){
-        let text = 
-"fn main() {
-    println!(\"Hello, world!\");
-
 }
-";
-        assert_eq!(count(text),3);
-    }
 
-    #[test]
-    fn ignores_lines_with_only_white_spaces(){
-        let text = 
-"fn main() {
-    println!(\"Hello, world!\");
-    
-}
-";
-        assert_eq!(count(text),3);
-    }
-
-    #[test]
-    fn ignores_comments(){
-        let text = 
-"fn main() {
-    //println!(\"Hello, world!\");
-}";
-        assert_eq!(count(text),2);
+fn count_normal_char(status:&mut CounterStatus,c:char) {
+    status.slash = false;
+    if c != ' ' && status.new_line {
+        status.counter += 1;
+        status.new_line = false;
     }
 }
