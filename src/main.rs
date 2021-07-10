@@ -6,15 +6,28 @@ fn main() {
 fn count(text:&str)->usize{
     let mut counter = 0;
     let mut new_line = true;
+    let mut slash = false;
     for c in text.chars() {
         if c == '\n' {
             new_line = true;
         }
-        else if c != ' ' {
+        else if c == '/' {
             if new_line {
-                counter += 1;
+                if slash {
+                    slash = false;
+                    new_line = false;
+                }
+                else{
+                    slash = true;
+                }
             }
-            new_line = false;
+        }
+        else{
+            slash = false;
+            if c != ' ' && new_line {
+                counter += 1;
+                new_line = false;
+            }
         }
     }
     
@@ -54,5 +67,14 @@ mod test {
 }
 ";
         assert_eq!(count(text),3);
+    }
+
+    #[test]
+    fn ignores_comments(){
+        let text = 
+"fn main() {
+    //println!(\"Hello, world!\");
+}";
+        assert_eq!(count(text),2);
     }
 }
